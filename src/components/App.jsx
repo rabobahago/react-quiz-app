@@ -9,6 +9,7 @@ const initialState = {
   //loading, error, ready, finished
   status: "loading",
   index: 0,
+  answer: null,
 };
 function reducer(state, action) {
   switch (action.type) {
@@ -23,6 +24,11 @@ function reducer(state, action) {
         ...state,
         status: "error",
       };
+    case "newAnswer":
+      return {
+        ...state,
+        answer: action.payload,
+      };
     case "start":
       return {
         ...state,
@@ -33,7 +39,7 @@ function reducer(state, action) {
   }
 }
 const App = () => {
-  const [{ questions, status, index }, dispatch] = useReducer(
+  const [{ questions, status, index, answer }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -53,7 +59,13 @@ const App = () => {
         {status === "ready" && (
           <StartScreen dispatch={dispatch} numQuestions={numQuestions} />
         )}
-        {status === "active" && <Question quest={questions[index]} />}
+        {status === "active" && (
+          <Question
+            quest={questions[index]}
+            answer={answer}
+            dispatch={dispatch}
+          />
+        )}
       </Home>
     </div>
   );
